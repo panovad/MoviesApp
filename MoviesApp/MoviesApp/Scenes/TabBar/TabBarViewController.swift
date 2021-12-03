@@ -10,6 +10,7 @@ import UIKit
 class TabBarViewController: UITabBarController {
     
     var moviesVc: UINavigationController!
+    var favoritesVc: UINavigationController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,7 @@ class TabBarViewController: UITabBarController {
     func setupTabBar() {
         self.tabBar.backgroundColor = .secondarySystemBackground
         self.tabBar.isTranslucent = false
-        self.tabBar.tintColor = .systemPurple
+        self.tabBar.tintColor = .gray
         self.selectedIndex = 0
         
         self.moviesVc = UINavigationController(rootViewController: MoviesViewController())

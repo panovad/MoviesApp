@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CollectionViewWaterfallLayout
 
 class MoviesViewController: UIViewController {
     
@@ -22,6 +23,7 @@ class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+        Utilities.sharedInstance.setupNavigationBar(controller: self, title: "Popular Movies")
         setupViews()
         setupConstraints()
         getPopularMovies()
@@ -31,10 +33,10 @@ class MoviesViewController: UIViewController {
     func setupViews() {
         self.view.backgroundColor = .white
         
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
+        let layout = CollectionViewWaterfallLayout()
+//        layout.scrollDirection = .vertical
+//        layout.minimumLineSpacing = 10
+//        layout.minimumInteritemSpacing = 10
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
@@ -48,13 +50,14 @@ class MoviesViewController: UIViewController {
     //MARK: - Setup Constraints
     func setupConstraints() {
         collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide).inset(15)
+            make.top.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(15)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
 }
 
 //MARK: - UICollectionView Delegate & Data Source
-extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSource, CollectionViewWaterfallLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.popularMovies.count
     }
@@ -62,15 +65,39 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MovieCollectionViewCell
         cell.setupCell(movie: self.popularMovies[indexPath.row])
+        
+        if indexPath.row == self.popularMovies.count - 1 {
+            if self.pagination.total_pages ?? 0 > self.currentPage {
+                self.currentPage += 1
+                self.getPopularMovies()
+                print("CURRENT PAGE: ", self.currentPage)
+            }
+        }
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (self.view.frame.size.width / 2) - 20, height: self.view.frame.size.height / 3)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movieDetailsVc = MovieDetailsViewController()
+        movieDetailsVc.movie = self.popularMovies[indexPath.row]
+        movieDetailsVc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(movieDetailsVc, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let width = (self.view.frame.self.width / 2) - 20
+        if indexPath.row % 3 == 0 {
+            return CGSize(width: width, height: self.view.frame.size.height / 2.8)
+        } else if indexPath.row % 4 == 0 {
+            return CGSize(width: width, height: self.view.frame.size.height / 3.1)
+        } else if indexPath.row % 2 == 0 {
+            return CGSize(width: width, height: self.view.frame.size.height / 2.9)
+        } else {
+            return CGSize(width: width, height: self.view.frame.size.height / 3.3)
+        }
     }
 }
 
-//MARK: - Get Popular Movies API
+//MARK: - Get Popular Movies API Request
 extension MoviesViewController {
     func getPopularMovies() {
         let decoder = JSONDecoder()
@@ -85,12 +112,13 @@ extension MoviesViewController {
                         if let data = response {
                             do {
                                 let decoded = try decoder.decode(PaginationMovies.self, from: data)
+                                self.pagination = decoded
                                 if let movies = decoded.results {
-                                    self.popularMovies = movies
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    self.collectionView.reloadData()
+                                    self.popularMovies += movies
+                                    
+                                    DispatchQueue.main.async {
+                                        self.collectionView.reloadData()
+                                    }
                                 }
                             } catch {
                                 print(error.localizedDescription)

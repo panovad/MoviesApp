@@ -92,4 +92,76 @@ class Utilities {
         
         return imageView
     }
+    
+    //MARK: - Convert date string to another date string format
+    func dateConvertor(fromFormat: String, toFormat: String, dateString: String) -> String {
+        
+        var convertedDate = ""
+        
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = fromFormat
+        
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = toFormat
+        
+        if let date = dateFormatterGet.date(from: dateString) {
+            convertedDate = dateFormatterPrint.string(from: date)
+        } else {
+            dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            if let date = dateFormatterGet.date(from: dateString) {
+                convertedDate = dateFormatterPrint.string(from: date)
+            } else {
+                dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                if let date = dateFormatterGet.date(from: dateString) {
+                    convertedDate = dateFormatterPrint.string(from: date)
+                }
+            }
+        }
+        return convertedDate
+    }
+    
+    //MARK: - Setup Navigation Bar
+    func setupNavigationBar(controller: UIViewController, title: String) {
+        
+        controller.navigationController?.navigationBar.prefersLargeTitles = true
+        controller.navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
+        controller.navigationItem.largeTitleDisplayMode = .always
+
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.backgroundColor = .secondarySystemBackground
+        navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 17)]
+        navBarAppearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 34)]
+        
+        controller.navigationController?.navigationBar.standardAppearance = navBarAppearance
+        controller.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        
+        controller.navigationItem.title = title
+        controller.navigationController?.navigationBar.setNeedsDisplay()
+    }
+    
+    //MARK: - CHECK IPHONE TYPE
+    func iphoneType(type: iPhoneType) -> Bool {
+        let bounds = UIScreen.main.bounds
+        let maxLength = max(bounds.size.height, bounds.size.width)
+        switch type {
+        case .iphone5:
+            return (maxLength <= 568)
+        case .Other:
+            return (maxLength > 568) && (maxLength <= 667)
+        case .iPhonePlus:
+            return (maxLength > 667) && (maxLength <= 736)
+        case .iPhoneXorXs:
+            return (maxLength > 736) && (maxLength <= 895)
+        case .iPhone11orBigger:
+            return (maxLength > 895)
+        }
+    }
+}
+
+enum iPhoneType {
+    case iPhone11orBigger
+    case iPhoneXorXs
+    case iPhonePlus
+    case iphone5
+    case Other
 }

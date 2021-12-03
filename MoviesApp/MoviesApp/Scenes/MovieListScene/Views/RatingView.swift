@@ -31,7 +31,11 @@ class RatingView: UIView {
     func setupViews() {
         self.backgroundColor = Utilities.sharedInstance.colorFromHexCode(hex: "#3d8072")
         
-        ratingLabel = Utilities.sharedInstance.createLabelWith(text: "\(rating ?? 0)", txtAlignment: .center, font: .systemFont(ofSize: 18), textColor: .black, backgroundColor: .clear)
+        ratingLabel = Utilities.sharedInstance.createLabelWith(text: "\(rating ?? 0)", txtAlignment: .center, font: .systemFont(ofSize: 18, weight: .bold), textColor: .white, backgroundColor: .clear)
+        
+        if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+            ratingLabel.font = .systemFont(ofSize: 13, weight: .bold)
+        }
         
         self.addSubview(ratingLabel)
         

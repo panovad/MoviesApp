@@ -1,16 +1,20 @@
 PODS:
+  - CollectionViewWaterfallLayout (0.5.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
+  - CollectionViewWaterfallLayout
   - SnapKit (~> 5.0.0)
 
 SPEC REPOS:
   trunk:
+    - CollectionViewWaterfallLayout
     - SnapKit
 
 SPEC CHECKSUMS:
+  CollectionViewWaterfallLayout: 4399ba01be265fff4da1ed1d607130fe009780e4
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: ccbebc6b817a020c3aaaf05dad36467ee1b1d7f1
+PODFILE CHECKSUM: c9ee6b08552e0ce3019d24994fbc3fc45e4db1bb
 
 COCOAPODS: 1.11.2
