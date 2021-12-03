@@ -26,9 +26,16 @@ class MovieCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.mainImageView.image = nil
+    }
+    
     //MARK: - Setup Views
     func setupViews() {
         self.contentView.backgroundColor = .clear
+        self.contentView.layer.borderColor = UIColor.lightGray.cgColor
+        self.contentView.layer.borderWidth = 0.5
         
         mainImageView = Utilities.sharedInstance.createImageViewWith(imageName: "", contentMode: .scaleAspectFill)
         
@@ -40,6 +47,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         ratingView = RatingView(frame: .zero, rating: 0)
         ratingView.layer.cornerRadius = 5
         
+        //Some changes for smaller devices
         if Utilities.sharedInstance.iphoneType(type: .iphone5) {
             titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
             overviewLabel.font = .systemFont(ofSize: 13)
@@ -69,6 +77,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         }
         
         ratingView.snp.makeConstraints { make in
+            //If the device has the dimensions of an iPhone 5 or smaller, we set different sizes
             if Utilities.sharedInstance.iphoneType(type: .iphone5) {
                 make.width.equalTo(40)
                 make.height.equalTo(25)
@@ -84,6 +93,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     func setupCell(movie: Movie) {
         let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.poster_path ?? "")
         APIManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
+        
         self.overviewLabel.text = movie.overview
         self.titleLabel.text = movie.title
         self.ratingView.ratingLabel.text = "\(movie.vote_average ?? 0.0)"

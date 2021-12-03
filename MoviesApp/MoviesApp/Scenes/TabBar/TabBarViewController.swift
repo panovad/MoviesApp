@@ -25,8 +25,11 @@ class TabBarViewController: UITabBarController {
         self.selectedIndex = 0
         
         self.moviesVc = UINavigationController(rootViewController: MoviesViewController())
-        self.moviesVc.tabBarItem = UITabBarItem(title: "Movies", image: UIImage(systemName: "video.fill"), tag: 0)
+        self.moviesVc.tabBarItem = UITabBarItem(title: "Movies", image: UIImage(systemName: "video"), selectedImage: UIImage(systemName: "video.fill"))
         
-        self.viewControllers = [moviesVc]
+        self.favoritesVc = UINavigationController(rootViewController: FavoriteMoviesViewController())
+        self.favoritesVc.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "heart"), selectedImage: UIImage(systemName: "heart.fill"))
+        
+        self.viewControllers = [moviesVc, favoritesVc]
     }
 }

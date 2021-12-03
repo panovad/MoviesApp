@@ -25,4 +25,6 @@ struct Movie: Codable {
     var runtime: Int?
     var title: String?
     var vote_average: Float?
+    
+    var isFavorite: Bool?
 }

@@ -66,7 +66,11 @@ class MovieDetailsTableViewCell: UITableViewCell {
     func setupConstraints() {
         self.mainImageView.snp.makeConstraints { make in
             make.top.left.right.equalTo(self.contentView)
-            make.height.equalTo(UIScreen.main.bounds.height * 0.4)
+            if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+                make.height.equalTo(UIScreen.main.bounds.height * 0.4)
+            } else {
+                make.height.equalTo(UIScreen.main.bounds.height * 0.3)
+            }
         }
         
         self.titleLabel.snp.makeConstraints { make in
@@ -120,6 +124,7 @@ class MovieDetailsTableViewCell: UITableViewCell {
         self.titleLabel.text = movie.title
         self.ratingView.ratingLabel.text = "\(movie.vote_average ?? 0.0)"
         
+        //If there is releaseDate available, format the string to look a bit different; else, show "unknown" release date
         if let releaseDate = movie.release_date {
             let dateStringFormatted = Utilities.sharedInstance.dateConvertor(fromFormat: "yyyy-MM-dd", toFormat: "MMM d, yyyy", dateString: releaseDate)
             self.releaseDateLabel.text = "Release date: " + dateStringFormatted
@@ -129,9 +134,10 @@ class MovieDetailsTableViewCell: UITableViewCell {
     }
     
     //MARK: - Find Movie Genres
-    ///Used to show the current movie's genres -- because we get the genre list separately and only get genre id's from the movie details
+    //Used to show the current movie's genres -- because we get the genre list separately and only get genre id's from the movie details
     func findCurrentMovieGenres(genres: [Genre]) {
         var currentMovieGenres = [Genre]()
+        //Iterate through all the genres available and the current movie's genres, then  look for a match between them
         for genre in genres {
             for currentGenre in self.movie.genre_ids ?? [Int]() {
                 if genre.id == currentGenre {
@@ -139,10 +145,11 @@ class MovieDetailsTableViewCell: UITableViewCell {
                 }
             }
         }
+        //Update the UILabel text 
         self.setupGenreLabel(genres: currentMovieGenres)
     }
     
-    ///Add the genres to the UILabel text
+    //Add the genres to the UILabel text
     func setupGenreLabel(genres: [Genre]) {
         var labelText = ""
         for genre in genres {
