@@ -9,22 +9,42 @@ import Foundation
 
 struct Movie: Codable {
     var adult: Bool?
-    var poster_path: String?
-    var backdrop_path: String?
+    var posterPath: String?
+    var backdropPath: String?
     var budget: Int?
-    var genre_ids: [Int]?
+    var genreIDs: [Int]?
     var homepage: String?
     var id: Int?
-    var imdb_id: String?
-    var original_language: String?
-    var original_title: String?
+    var imdbID: String?
+    var originalLanguage: String?
+    var originalTitle: String?
     var overview: String?
     var popularity: Float?
-    var release_date: String?
+    var releaseDate: String?
     var revenue: Int?
     var runtime: Int?
     var title: String?
-    var vote_average: Float?
-    
+    var voteAverage: Float?
     var isFavorite: Bool?
+    
+    enum CodingKeys: String, CodingKey {
+        case adult
+        case posterPath = "poster_path"
+        case backdropPath = "backdrop_path"
+        case budget
+        case genreIDs = "genre_ids"
+        case homepage
+        case id
+        case imdbID = "imdb_id"
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case overview
+        case popularity
+        case releaseDate = "release_date"
+        case revenue
+        case runtime
+        case title
+        case voteAverage = "vote_average"
+        case isFavorite
+    }
 }

@@ -19,11 +19,6 @@ class Utilities {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    //Check if device has Internet Connection
-    func hasInternetConnection() -> Bool {
-        return Reachability.sharedInstance.isInternetAvailable()
-    }
-    
     //Convert Hex String to UIColor
     func colorFromHexCode(hex: String) -> UIColor {
         let r, g, b, a: CGFloat

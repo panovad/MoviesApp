@@ -95,8 +95,8 @@ class FavoriteMovieTableViewCell: UITableViewCell {
     
     //MARK: - Setup Cell
     func setupCell(movie: Movie) {
-        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.backdrop_path ?? "")
-        APIManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
+        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.backdropPath ?? "")
+        NetworkManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
         
         self.titleLabel.text = movie.title ?? "Unknown"
         self.overviewLabel.text = movie.overview ?? "/"

@@ -65,7 +65,7 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.setupCell(movie: self.popularMovies[indexPath.row])
         
         if indexPath.row == self.popularMovies.count - 1 {
-            if self.pagination.total_pages ?? 0 > self.currentPage {
+            if self.pagination.totalPages ?? 0 > self.currentPage {
                 self.currentPage += 1
                 self.getPopularMovies()
             }
@@ -101,41 +101,16 @@ extension MoviesViewController: UICollectionViewDelegate, UICollectionViewDataSo
 //MARK: - Get Popular Movies API Request
 extension MoviesViewController {
     func getPopularMovies() {
-        let decoder = JSONDecoder()
-        
-        //adding 'currentPage' at the end in order to be able to have pagination
-        let path = Constants.Endpoints.popularMovies + "\(currentPage)"
-        
-        //Check if the user has Internet Connection
-        if Utilities.sharedInstance.hasInternetConnection() {
-            APIManager.sharedInstance.makeRequest(path: path) { success, response, statusCode in
-                if success {
-                    if statusCode == 200 {
-                        //Check if there is any data
-                        if let data = response {
-                            do {
-                                //Try to decode the data into our needed Object
-                                let decoded = try decoder.decode(PaginationMovies.self, from: data)
-                                self.pagination = decoded
-                                if let movies = decoded.results {
-                                    self.popularMovies += movies
-                                    
-                                    //Reload the UICollectionView data
-                                    DispatchQueue.main.async {
-                                        self.collectionView.reloadSections(IndexSet(integer: 0))
-                                    }
-                                }
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                        } else {
-                            Utilities.sharedInstance.createOKAlert(title: "Error loading data!", viewController: self)
-                        }
-                    } else {
-                        Utilities.sharedInstance.createOKAlert(title: "There was a problem loading this request. Please try again later.", viewController: self)
+        if NetworkManager.sharedInstance.hasInternetConnection() {
+            NetworkManager.sharedInstance.getPopularMovies(page: currentPage) { paginationMovies, error in
+                if let movies = paginationMovies?.results, let pagination = paginationMovies {
+                    self.popularMovies += movies
+                    self.pagination = pagination
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadSections(IndexSet(integer: 0))
                     }
                 } else {
-                    Utilities.sharedInstance.createOKAlert(title: "There was a problem loading this request. Please try again later.", viewController: self)
+                    Utilities.sharedInstance.createOKAlert(title: error?.localizedDescription ?? "An error has occured. Please try again later.", viewController: self)
                 }
             }
         } else {

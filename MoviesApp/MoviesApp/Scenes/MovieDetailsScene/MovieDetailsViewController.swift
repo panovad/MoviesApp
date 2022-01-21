@@ -81,38 +81,14 @@ extension MovieDetailsViewController: UITableViewDelegate, UITableViewDataSource
 //MARK: - Get Movie Genres API Request
 extension MovieDetailsViewController {
     func getMovieGenres() {
-        let decoder = JSONDecoder()
-        let path = Constants.Endpoints.movieGenres
-        
         //Check if the user has Internet Connection
-        if Utilities.sharedInstance.hasInternetConnection() {
-            APIManager.sharedInstance.makeRequest(path: path) { success, response, statusCode in
-                if success {
-                    if statusCode == 200 {
-                        //Check if there is any data
-                        if let data = response {
-                            do {
-                                //Try to decode the data
-                                let decoded = try decoder.decode(Genres.self, from: data)
-                                if let genres = decoded.genres {
-                                    self.genres = genres
-                                    
-                                    //Reload UITableView data
-                                    DispatchQueue.main.async {
-                                        self.tableView.reloadData()
-                                    }
-                                }
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                        } else {
-                            Utilities.sharedInstance.createOKAlert(title: "Error loading data!", viewController: self)
-                        }
-                    } else {
-                        Utilities.sharedInstance.createOKAlert(title: "There was a problem loading this request. Please try again later.", viewController: self)
+        if NetworkManager.sharedInstance.hasInternetConnection() {
+            NetworkManager.sharedInstance.getMovieGenres { genres, error in
+                if let genres = genres?.genres {
+                    self.genres = genres
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
                     }
-                } else {
-                    Utilities.sharedInstance.createOKAlert(title: "There was a problem loading this request. Please try again later.", viewController: self)
                 }
             }
         } else {
@@ -125,26 +101,15 @@ extension MovieDetailsViewController {
 extension MovieDetailsViewController {
     @objc func buttonAction(sender: UIBarButtonItem) {
         //Increment the number of times 'favorite button' has been tapped
-        self.numberOfTaps += 1
-        //Check if the movie has been set to 'favorite' so far or not
         if !movieIsFavorite {
-            //If the movie has not been set to 'favorite' so far, the first touch will make it favorite, the second not favorite and so on
-            if numberOfTaps % 2 == 0 {
-                self.favoriteBarButtonItem.image = UIImage(systemName: "heart")
-                self.movieIsFavorite = false
-            } else {
-                self.favoriteBarButtonItem.image = UIImage(systemName: "heart.fill")
-                self.movieIsFavorite = true
-            }
+            //If the movie has not been set to 'favorite' so far, set it to favorite
+            self.favoriteBarButtonItem.image = UIImage(systemName: "heart.fill")
+            self.movieIsFavorite = true
         } else {
-            //If the movie has been set to 'favorite' so far, the first touch will make it not favorite, the second favorite and so on
-            if numberOfTaps % 2 == 0 {
-                self.favoriteBarButtonItem.image = UIImage(systemName: "heart.fill")
-                self.movieIsFavorite = true
-            } else {
-                self.favoriteBarButtonItem.image = UIImage(systemName: "heart")
-                self.movieIsFavorite = false
-            }
+            //If the movie has been set to 'favorite' so far, set it to not favorite
+            self.favoriteBarButtonItem.image = UIImage(systemName: "heart")
+            self.movieIsFavorite = false
+            
         }
         //Update the 'favorite movies' list
         self.updateFavoriteMovieList(favorite: self.movieIsFavorite)

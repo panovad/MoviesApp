@@ -91,11 +91,11 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     //MARK: - Setup Cell
     func setupCell(movie: Movie) {
-        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.poster_path ?? "")
-        APIManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
+        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.posterPath ?? "")
+        NetworkManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
         
         self.overviewLabel.text = movie.overview
         self.titleLabel.text = movie.title
-        self.ratingView.ratingLabel.text = "\(movie.vote_average ?? 0.0)"
+        self.ratingView.ratingLabel.text = "\(movie.voteAverage ?? 0.0)"
     }
 }

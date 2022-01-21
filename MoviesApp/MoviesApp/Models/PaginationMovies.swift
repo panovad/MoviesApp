@@ -10,6 +10,13 @@ import Foundation
 struct PaginationMovies: Codable {
     var page: Int?
     var results: [Movie]?
-    var total_results: Int?
-    var total_pages: Int?
+    var totalResults: Int?
+    var totalPages: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case results
+        case totalResults = "total_results"
+        case totalPages = "total_pages"
+    }
 }

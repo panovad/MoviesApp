@@ -117,15 +117,15 @@ class MovieDetailsTableViewCell: UITableViewCell {
     func setupCell(movie: Movie) {
         self.movie = movie
         
-        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.backdrop_path ?? "")
-        APIManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
+        let imgPath = "https://image.tmdb.org/t/p/w500" + (movie.backdropPath ?? "")
+        NetworkManager.sharedInstance.downloadImage(from: URL(string: imgPath)!, imageView: self.mainImageView)
         
         self.overviewLabel.text = movie.overview
         self.titleLabel.text = movie.title
-        self.ratingView.ratingLabel.text = "\(movie.vote_average ?? 0.0)"
+        self.ratingView.ratingLabel.text = "\(movie.voteAverage ?? 0.0)"
         
         //If there is releaseDate available, format the string to look a bit different; else, show "unknown" release date
-        if let releaseDate = movie.release_date {
+        if let releaseDate = movie.releaseDate {
             let dateStringFormatted = Utilities.sharedInstance.dateConvertor(fromFormat: "yyyy-MM-dd", toFormat: "MMM d, yyyy", dateString: releaseDate)
             self.releaseDateLabel.text = "Release date: " + dateStringFormatted
         } else {
@@ -139,7 +139,7 @@ class MovieDetailsTableViewCell: UITableViewCell {
         var currentMovieGenres = [Genre]()
         //Iterate through all the genres available and the current movie's genres, then  look for a match between them
         for genre in genres {
-            for currentGenre in self.movie.genre_ids ?? [Int]() {
+            for currentGenre in self.movie.genreIDs ?? [Int]() {
                 if genre.id == currentGenre {
                     currentMovieGenres.append(genre)
                 }
