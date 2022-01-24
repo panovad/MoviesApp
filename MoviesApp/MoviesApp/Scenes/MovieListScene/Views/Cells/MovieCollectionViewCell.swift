@@ -48,7 +48,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         ratingView.layer.cornerRadius = 5
         
         //Some changes for smaller devices
-        if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+        if Utilities.sharedInstance.iphoneType(type: .iPhone5) {
             titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
             overviewLabel.font = .systemFont(ofSize: 13)
             overviewLabel.numberOfLines = 3
@@ -78,7 +78,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         
         ratingView.snp.makeConstraints { make in
             //If the device has the dimensions of an iPhone 5 or smaller, we set different sizes
-            if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+            if Utilities.sharedInstance.iphoneType(type: .iPhone5) {
                 make.width.equalTo(40)
                 make.height.equalTo(25)
             } else {

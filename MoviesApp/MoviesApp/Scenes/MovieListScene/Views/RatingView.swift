@@ -33,7 +33,7 @@ class RatingView: UIView {
         
         ratingLabel = Utilities.sharedInstance.createLabelWith(text: "\(rating ?? 0)", txtAlignment: .center, font: .systemFont(ofSize: 18, weight: .bold), textColor: .white, backgroundColor: .clear)
         
-        if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+        if Utilities.sharedInstance.iphoneType(type: .iPhone5) {
             ratingLabel.font = .systemFont(ofSize: 13, weight: .bold)
         }
         

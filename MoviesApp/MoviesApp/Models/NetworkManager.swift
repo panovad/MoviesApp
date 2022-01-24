@@ -19,23 +19,17 @@ class NetworkManager {
     var baseUrl = "https://api.themoviedb.org/3"
     var API_KEY = "173546c40c028e7aaf241378a8a8ae12"
     var language = "&language=en-US"
-    var header = [
-        "Content-Type" : "application/json"
-    ]
     
-    //    var popularMovies = baseUrl + "/movie/popular?api_key=" + API_KEY + language + "&page="
-    //    var movieGenres = baseUrl + "/genre/movie/list?api_key=" + API_KEY + language
-
     //Check if device has Internet Connection
     func hasInternetConnection() -> Bool {
         return Reachability.sharedInstance.isInternetAvailable()
     }
     
     //Request Creation
-    private func createRequest(url: String) -> URLRequest? {
+    private func createRequest(url: String, httpMethod: String?) -> URLRequest? {
         guard let url = URL(string: url) else { return nil }
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = httpMethod
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         return request
     }
@@ -62,7 +56,7 @@ class NetworkManager {
     //Get Popular Movies
     func getPopularMovies(page: Int, completion: @escaping MoviesCompletion) {
         let url = baseUrl + "/movie/popular?api_key=" + API_KEY + language + "&page=" + "\(page)"
-        guard let request = createRequest(url: url) else {
+        guard let request = createRequest(url: url, httpMethod: "GET") else {
             completion(nil, NetworkError.invalidUrl)
             return
         }
@@ -72,7 +66,7 @@ class NetworkManager {
     //Get Different Movie Genres
     func getMovieGenres(completion: @escaping GenresCompletion) {
         let url = baseUrl + "/genre/movie/list?api_key=" + API_KEY + language
-        guard let request = createRequest(url: url) else {
+        guard let request = createRequest(url: url, httpMethod: "GET") else {
             completion(nil, NetworkError.invalidUrl)
             return
         }

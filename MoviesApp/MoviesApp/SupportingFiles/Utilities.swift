@@ -139,7 +139,7 @@ class Utilities {
         let bounds = UIScreen.main.bounds
         let maxLength = max(bounds.size.height, bounds.size.width)
         switch type {
-        case .iphone5:
+        case .iPhone5:
             return (maxLength <= 568)
         case .Other:
             return (maxLength > 568) && (maxLength <= 667)
@@ -157,6 +157,6 @@ enum iPhoneType {
     case iPhone11orBigger
     case iPhoneXorXs
     case iPhonePlus
-    case iphone5
+    case iPhone5
     case Other
 }

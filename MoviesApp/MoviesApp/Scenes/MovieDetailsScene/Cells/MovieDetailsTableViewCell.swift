@@ -66,7 +66,7 @@ class MovieDetailsTableViewCell: UITableViewCell {
     func setupConstraints() {
         self.mainImageView.snp.makeConstraints { make in
             make.top.left.right.equalTo(self.contentView)
-            if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+            if Utilities.sharedInstance.iphoneType(type: .iPhone5) {
                 make.height.equalTo(UIScreen.main.bounds.height * 0.4)
             } else {
                 make.height.equalTo(UIScreen.main.bounds.height * 0.3)
@@ -80,7 +80,7 @@ class MovieDetailsTableViewCell: UITableViewCell {
         
         self.ratingView.snp.makeConstraints { make in
             make.top.right.equalTo(self.mainImageView).inset(20)
-            if Utilities.sharedInstance.iphoneType(type: .iphone5) {
+            if Utilities.sharedInstance.iphoneType(type: .iPhone5) {
                 make.width.equalTo(60)
                 make.height.equalTo(30)
             } else {
