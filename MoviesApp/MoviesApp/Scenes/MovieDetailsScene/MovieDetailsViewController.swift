@@ -89,6 +89,10 @@ extension MovieDetailsViewController {
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
+                } else if let errorDesc = error?.localizedDescription {
+                    Utilities.sharedInstance.createOKAlert(title: errorDesc, viewController: self)
+                } else {
+                    Utilities.sharedInstance.createOKAlert(title: error?.localizedDescription ?? "An error has occured. Please try again later.", viewController: self)
                 }
             }
         } else {

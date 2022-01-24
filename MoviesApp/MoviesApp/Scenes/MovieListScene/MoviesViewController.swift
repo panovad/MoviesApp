@@ -109,6 +109,8 @@ extension MoviesViewController {
                     DispatchQueue.main.async {
                         self.collectionView.reloadSections(IndexSet(integer: 0))
                     }
+                } else if let errorDesc = error?.localizedDescription {
+                    Utilities.sharedInstance.createOKAlert(title: errorDesc, viewController: self)
                 } else {
                     Utilities.sharedInstance.createOKAlert(title: error?.localizedDescription ?? "An error has occured. Please try again later.", viewController: self)
                 }
