@@ -1,0 +1,32 @@
+name: Github Actions Test One
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  job1:
+    runs-on: [ubuntu-latest, macos-latest, windows-latest]
+    name: My first job
+    steps:
+      - run: echo "I wrote this myself"
+      - run: echo "The name of this branch is  ${{ github.ref }}"
+      - run: echo "This job's status is ${{ job.status }}"
+  job2:
+    runs-on: [macos-latest]
+    name: My second job
+    needs: job1
+    steps: 
+      - run: echo "This is the second step"
+      - run: echo "The name of this repository is ${{ github.repository }}"
+      - run: echo "This job's status is ${{ job.status }}"
+  job3:
+    runs-on: [linux-latest]
+    name: My third job
+    if: ${{ always() }}
+    needs: [job1, job2]
+    steps: 
+      - run: echo "This is the third step and it needs both job1 and job2 to finish before starting"
+      - run: echo "This job's status is ${{ job.status }}
